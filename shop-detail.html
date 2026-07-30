@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <link rel="preload" as="image" href="assets/shop-detail-full.png">
+  <title>逸道(益丰·外滩源店) - 商户详情</title>
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    if (sessionStorage.getItem('shopDetailTransition')) {
+      document.documentElement.classList.add('detail-page--entering');
+      window.scrollTo(0, 0);
+    }
+  </script>
+  <style>
+    /* ============================================================
+       商户详情页（切图方案）
+       设计基准：780px @2x → vw 方案
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+      background: #F5F5F5;
+      -webkit-font-smoothing: antialiased;
+      -webkit-overflow-scrolling: touch;
+      overflow-x: hidden;
+    }
+    html.detail-page--entering { opacity: 0; }
+    html.detail-page--entering.detail-page--entered {
+      opacity: 1;
+      transition: opacity 0.09s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* 页面容器 */
+    .detail-page {
+      position: relative;
+      width: 100%;
+    }
+
+    /* 整张切图 */
+    .detail-page__img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* 返回按钮热区 — 覆盖在切图左上角的返回箭头位置 */
+    .detail-page__back {
+      position: fixed;
+      top: 10.26vw; /* 80px @2x */
+      left: 1.28vw;  /* 10px @2x */
+      width: 12.82vw; /* 100px @2x */
+      height: 12.82vw;
+      z-index: 100;
+      cursor: pointer;
+      border-radius: 50%;
+      /* 开发调试时可取消注释查看热区 */
+      /* background: rgba(255,0,0,0.2); */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="detail-page">
+    <!-- 返回按钮热区 -->
+    <a class="detail-page__back" id="backBtn"></a>
+    <!-- 整页切图 -->
+    <img class="detail-page__img" src="assets/shop-detail-full.png" alt="逸道(益丰·外滩源店) 商户详情">
+  </div>
+
+  <script>
+    // ---------- 快速渐显入场 ----------
+    (function() {
+      if (!sessionStorage.getItem('shopDetailTransition')) return;
+      sessionStorage.removeItem('shopDetailTransition');
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          document.documentElement.classList.add('detail-page--entered');
+        });
+      });
+    })();
+
+    // ---------- 返回按钮 ----------
+    document.getElementById('backBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+
+</body>
+</html>
