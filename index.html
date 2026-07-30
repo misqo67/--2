@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <link rel="preload" as="image" href="assets/header-full-baizhanji.webp">
-  <link rel="preload" as="image" href="assets/header-full-xiaolongbao.webp">
-  <link rel="preload" as="image" href="assets/header-full-hongsharou.webp">
   <link rel="prefetch" as="document" href="shop-detail.html">
   <link rel="prefetch" as="document" href="shop-detail-renhe.html">
   <link rel="prefetch" as="document" href="shop-detail-yijia.html">
@@ -801,17 +798,23 @@ cursor: pointer;
     }
     .category-list--stagger.category-list--stagger-in .shop-card-img,
     .category-list--stagger.category-list--stagger-in .shop-divider {
-      animation: shop-list-item-in 0.42s cubic-bezier(0.22, 0.75, 0.25, 1) both;
+      animation: shop-list-item-in 0.26s cubic-bezier(0.22, 0.75, 0.25, 1) both;
     }
     /* 首张卡给一个极短预延迟，确保浏览器已提交隐藏初帧后再开始插值，消除首帧跳变。 */
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(1) { animation-delay: 24ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 94ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 164ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 234ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 304ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 374ms; }
-    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 444ms; }
-    .category-list--stagger.category-list--stagger-in .shop-divider { animation-delay: 59ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(1) { animation-delay: 10ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 36ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 62ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 88ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 114ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 140ms; }
+    .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 166ms; }
+    .category-list--stagger.category-list--stagger-in .shop-divider { animation-delay: 22ms; }
+    @media (prefers-reduced-motion: reduce) {
+      .category-list--stagger .shop-card-img,
+      .category-list--stagger .shop-divider { opacity: 1; transform: none; }
+      .category-list--stagger-in .shop-card-img,
+      .category-list--stagger.category-list--stagger-in .shop-divider { animation: none; }
+    }
     @keyframes shop-list-item-in {
       0% { opacity: 0; transform: translate3d(0, 8px, 0); }
       55% { opacity: 0.82; transform: translate3d(0, 1px, 0); }
@@ -880,7 +883,7 @@ cursor: pointer;
       <div class="expand-panel__section">
         <div class="expand-panel__section-title">当地特色</div>
         <div class="expand-panel__grid">
-          <div class="expand-panel__grid-item" data-dish="all"><div class="expand-panel__grid-img"><img src="assets/tab-all.webp" alt="全部"></div><span class="expand-panel__grid-label">全部</span></div>
+          <div class="expand-panel__grid-item" data-dish="all"><div class="expand-panel__grid-img"><img src="assets/tab-all.webp" alt="全部" fetchpriority="high"></div><span class="expand-panel__grid-label">全部</span></div>
           <div class="expand-panel__grid-item" data-dish="baizhanji"><div class="expand-panel__grid-img"><img src="assets/tab-baizhanji.webp" alt="白斩鸡"></div><span class="expand-panel__grid-label">白斩鸡</span></div>
           <div class="expand-panel__grid-item" data-dish="xiaolongbao"><div class="expand-panel__grid-img"><img src="assets/tab-xiaolongbao.webp" alt="小笼包"></div><span class="expand-panel__grid-label">小笼包</span></div>
           <div class="expand-panel__grid-item" data-dish="hongsharou"><div class="expand-panel__grid-img"><img src="assets/tab-hongsharou.webp" alt="红烧肉"></div><span class="expand-panel__grid-label">红烧肉</span></div>
@@ -1107,23 +1110,23 @@ cursor: pointer;
     <!-- ---------- 内容态 2：单分类商户列表（白斩鸡） ---------- -->
     <div class="category-list" id="category-baizhanji" data-category-panel="baizhanji">
       <div class="category-list__header">
-        <img class="category-list__header-full" src="assets/header-full-baizhanji.webp" alt="上海 · 白斩鸡榜">
+        <img class="category-list__header-full" data-src="assets/header-full-baizhanji.webp" alt="上海 · 白斩鸡榜">
       </div>
       <div class="category-list__main">
         <div class="category-list__shops">
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-1.webp" alt="苏小柳点心·手作小笼包(康桥分院)" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-1.webp" alt="苏小柳点心·手作小笼包(康桥分院)" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-2.webp" alt="渔水之家柴火菜饭（人民广场店）" data-href="shop-detail-renhe.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-2.webp" alt="渔水之家柴火菜饭（人民广场店）" data-href="shop-detail-renhe.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-3.webp" alt="老兴鲜（黄浦店）" data-href="shop-detail-yijia.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-3.webp" alt="老兴鲜（黄浦店）" data-href="shop-detail-yijia.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-4.webp" alt="兴兴·海派本帮菜" data-href="shop-detail-heji.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-4.webp" alt="兴兴·海派本帮菜" data-href="shop-detail-heji.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-5.webp" alt="原乡楼（朱家角古镇店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-5.webp" alt="原乡楼（朱家角古镇店）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-6.webp" alt="阿明小菜·海鲜·上海菜（东方路店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-6.webp" alt="阿明小菜·海鲜·上海菜（东方路店）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-baizhanji-full-7.webp" alt="道道鲜·崇明私房菜（延安西路店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-baizhanji-full-7.webp" alt="道道鲜·崇明私房菜（延安西路店）" data-href="shop-detail.html">
         </div>
       </div>
       <div class="safe-area-bottom"></div>
@@ -1132,23 +1135,23 @@ cursor: pointer;
     <!-- ---------- 内容态 2：单分类商户列表（小笼包） ---------- -->
     <div class="category-list" id="category-xiaolongbao" data-category-panel="xiaolongbao">
       <div class="category-list__header">
-        <img class="category-list__header-full" src="assets/header-full-xiaolongbao.webp" alt="上海 · 小笼包榜">
+        <img class="category-list__header-full" data-src="assets/header-full-xiaolongbao.webp" alt="上海 · 小笼包榜">
       </div>
       <div class="category-list__main">
         <div class="category-list__shops">
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-1.webp" alt="屋有鲜" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-1.webp" alt="屋有鲜" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-2.webp" alt="莱莱小笼·乔艾" data-href="shop-detail-renhe.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-2.webp" alt="莱莱小笼·乔艾" data-href="shop-detail-renhe.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-3.webp" alt="馋三尺蟹粉小笼（人民广场店）" data-href="shop-detail-yijia.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-3.webp" alt="馋三尺蟹粉小笼（人民广场店）" data-href="shop-detail-yijia.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-4.webp" alt="佳佳汤包" data-href="shop-detail-heji.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-4.webp" alt="佳佳汤包" data-href="shop-detail-heji.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-5.webp" alt="熙盛源（丰庄路店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-5.webp" alt="熙盛源（丰庄路店）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-6.webp" alt="上海古猗园餐厅（沪宜公路店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-6.webp" alt="上海古猗园餐厅（沪宜公路店）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-xiaolongbao-full-7.webp" alt="庄氏隆兴·海派蟹点（上海首店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-xiaolongbao-full-7.webp" alt="庄氏隆兴·海派蟹点（上海首店）" data-href="shop-detail.html">
         </div>
       </div>
       <div class="safe-area-bottom"></div>
@@ -1157,23 +1160,23 @@ cursor: pointer;
     <!-- ---------- 内容态 2：单分类商户列表（红烧肉，完整可跳转商户详情） ---------- -->
     <div class="category-list" id="category-hongsharou" data-category-panel="hongsharou">
       <div class="category-list__header">
-        <img class="category-list__header-full" src="assets/header-full-hongsharou.webp" alt="上海 · 红烧肉榜">
+        <img class="category-list__header-full" data-src="assets/header-full-hongsharou.webp" alt="上海 · 红烧肉榜">
       </div>
       <div class="category-list__main">
         <div class="category-list__shops">
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-1.webp" alt="逸道（益丰·外滩源店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-1.webp" alt="逸道（益丰·外滩源店）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-2.webp" alt="人和馆·上海菜（徐汇店）" data-href="shop-detail-renhe.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-2.webp" alt="人和馆·上海菜（徐汇店）" data-href="shop-detail-renhe.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-3.webp" alt="忆家一宴（南丹东路总店）" data-href="shop-detail-yijia.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-3.webp" alt="忆家一宴（南丹东路总店）" data-href="shop-detail-yijia.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-4.webp" alt="和记小菜（控江店）" data-href="shop-detail-heji.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-4.webp" alt="和记小菜（控江店）" data-href="shop-detail-heji.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-5.webp" alt="御廷公馆·上海菜（新世纪新丸）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-5.webp" alt="御廷公馆·上海菜（新世纪新丸）" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-6.webp" alt="福1088" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-6.webp" alt="福1088" data-href="shop-detail.html">
           <div class="shop-divider"></div>
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-7.webp" alt="品筵·本帮菜·海鲜（中华路店）" data-href="shop-detail.html">
+          <img class="shop-card-img" data-src="assets/shop-hongsharou-full-7.webp" alt="品筵·本帮菜·海鲜（中华路店）" data-href="shop-detail.html">
         </div>
       </div>
       <div class="safe-area-bottom"></div>
@@ -1383,6 +1386,7 @@ allContent.style.display = 'none';
       allSafeArea.style.display = 'none';
       document.querySelectorAll('.category-list').forEach(function(panel) {
         var isTargetPanel = panel.dataset.categoryPanel === key;
+        if (isTargetPanel) hydratePanelImages(panel);
         panel.classList.toggle('category-list--active', isTargetPanel);
 panel.classList.remove('category-list--stagger-in');
 panel.classList.toggle('category-list--transitioning-header', isTargetPanel && isCategoryPreparing);
@@ -1581,6 +1585,33 @@ categoryTransition.className = 'category-transition category-transition--active'
     window.addEventListener('touchmove', onScroll, { passive: true });
     window.addEventListener('resize', updateStickyHeader);
 
+// ---------- 分类面板图片按需装载 ----------
+function hydratePanelImages(panel) {
+  if (!panel || panel.dataset.hydrated === '1') return;
+  panel.dataset.hydrated = '1';
+  panel.querySelectorAll('img[data-src]').forEach(function(img) {
+    img.decoding = 'async';
+    img.src = img.getAttribute('data-src');
+    img.removeAttribute('data-src');
+  });
+}
+// 首屏加载完成后，空闲时逐个预热各分类面板，切换时即可直接命中缓存
+function warmCategoryPanels() {
+  var panels = [].slice.call(document.querySelectorAll('.category-list'));
+  (function next() {
+    var panel = panels.shift();
+    if (!panel) return;
+    hydratePanelImages(panel);
+    onIdle(next, 1200);
+  })();
+}
+function onIdle(fn, timeout) {
+  if (window.requestIdleCallback) window.requestIdleCallback(fn, { timeout: timeout || 1500 });
+  else setTimeout(fn, 200);
+}
+if (document.readyState === 'complete') onIdle(warmCategoryPanels);
+else window.addEventListener('load', function() { onIdle(warmCategoryPanels); });
+
 // ---------- 商户详情页：使用预解码整页切图即时打开，避免 iframe 首帧合成卡顿 ----------
 var detailImageMap = {
   'shop-detail.html': 'assets/shop-detail-full.webp',
@@ -1601,11 +1632,29 @@ detailOverlay.appendChild(detailOverlayImage);
 detailOverlay.appendChild(detailOverlayBack);
 document.body.appendChild(detailOverlay);
 // 页面空闲时只解码详情切图，不创建和渲染多个全屏 iframe。
-Object.keys(detailImageMap).forEach(function(href) {
-  var image = new Image();
-  image.src = detailImageMap[href];
-  if (image.decode) image.decode().catch(function() {});
-});
+var detailImageCache = {};
+function warmDetailImages() {
+  Object.keys(detailImageMap).forEach(function(href) {
+    var src = detailImageMap[href];
+    if (detailImageCache[src]) return;
+    var image = new Image();
+    image.decoding = 'async';
+    image.src = src;
+    detailImageCache[src] = image;
+    if (image.decode) image.decode().catch(function() {});
+  });
+}
+// 等首屏资源加载完毕、浏览器空闲时再预热详情图，避免抢占首屏带宽
+function scheduleWarm() {
+  onIdle(warmDetailImages, 2000);
+}
+if (document.readyState === 'complete') scheduleWarm();
+else window.addEventListener('load', scheduleWarm);
+// 手指按下即开始预热对应图，进一步抢出时间
+document.addEventListener('touchstart', function(e) {
+  var card = e.target.closest && e.target.closest('.shop-card-img[data-href]');
+  if (card) warmDetailImages();
+}, { passive: true, once: true });
 function closeDetailOverlay() {
   detailOverlay.className = 'detail-page-overlay';
   detailOverlay.scrollTop = 0;
@@ -1617,8 +1666,17 @@ document.querySelectorAll('.shop-card-img[data-href]').forEach(function(card) {
     if (!href || !detailImageMap[href]) return;
     // 同一图层直接换入预解码切图；不等待页面请求、iframe 布局或首帧绘制。
     detailOverlay.scrollTop = 0;
-    detailOverlayImage.src = detailImageMap[href];
-    detailOverlay.className = 'detail-page-overlay detail-page-overlay--visible';
+    var src = detailImageMap[href];
+    var cached = detailImageCache[src];
+    // 已预解码则直接换图显示；未就绪时先显示遮罩底色，解码完成再点亮，避免白屏闪烁
+    if (cached && cached.complete) {
+      detailOverlayImage.src = src;
+      detailOverlay.className = 'detail-page-overlay detail-page-overlay--visible';
+    } else {
+      detailOverlayImage.src = src;
+      detailOverlay.className = 'detail-page-overlay detail-page-overlay--visible';
+      warmDetailImages();
+    }
   });
 });
   </script>
