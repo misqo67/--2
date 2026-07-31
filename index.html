@@ -823,11 +823,11 @@ cursor: pointer;
 /* 逸道详情切图中的「王牌菜榜」标签点击热区，返回红烧肉榜商户列表。 */
 .detail-page-overlay__rank-back {
 position: fixed;
-/* 覆盖逸道详情中用户标注的整条榜单信息栏，提升点击容错。 */
-top: 34vw;
+/* 覆盖逸道详情顶部完整信息区：商户名称、评分、榜单标签与营业信息均可点击返回。 */
+top: 25vw;
 left: 0;
 width: 100vw;
-height: 32vw;
+height: 52vw;
 z-index: 2;
 display: none;
 border: 0;
@@ -1718,8 +1718,8 @@ detailRankBack.addEventListener('click', returnToHongsharouRank);
 // 热区按钮之外再由详情容器兜底识别整条榜单信息栏，保证点击切图标签本身也能返回。
 detailOverlay.addEventListener('click', function(event) {
   if (!detailOverlay.classList.contains('detail-page-overlay--yidao')) return;
-  var top = window.innerWidth * 0.34;
-  var bottom = window.innerWidth * 0.66;
+  var top = window.innerWidth * 0.25;
+  var bottom = window.innerWidth * 0.77;
   if (event.clientY >= top && event.clientY <= bottom) {
     event.preventDefault();
     returnToHongsharouRank();
