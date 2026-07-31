@@ -213,23 +213,6 @@ padding-bottom: 2.56vw;
 }
     /* 进入分类时隐藏 hero 内的 tabs，避免与吸顶 tabs 同时可见导致“出现两次”。 */
     .hero--tabs-hidden .category-tabs { visibility: hidden; }
-    /* Tab 位移飞层：克隆 hero 内的 tabs，从原位真实位移到吸顶位置，
-       避免“原 tabs 直接消失 + 吸顶 tabs 凭空出现”的跳变感。 */
-    .category-tabs-flyer {
-      position: fixed;
-      left: 0;
-      width: 100%;
-      z-index: 620;
-      pointer-events: none;
-      will-change: transform;
-      transition: transform 0.26s cubic-bezier(0.22, 0.8, 0.25, 1);
-    }
-    .category-tabs-flyer .category-tabs {
-      position: relative;
-      bottom: auto;
-      left: auto;
-    }
-
     /* ============================================================
        吸顶层：状态栏 + 导航栏 + 分类Tab
        页面下滑超过头图区域后，或切到具体分类 Tab 时，
@@ -1485,42 +1468,8 @@ stickyHeader.classList.add('sticky-header--category');
       void stickyHeader.offsetHeight;
       stickyHeader.style.transition = '';
 
-      // -- tabs 位移飞层：从 hero 原位平滑滑到吸顶位置 --
-      // 先隐藏两端的 tabs（hero 的 & 吸顶的），让飞层独占视觉。
+      // 吸顶 tabs 出现的同时隐藏 hero 内的 tabs，避免两份 tabs 同时可见。
       hero.classList.add('hero--tabs-hidden');
-      var stickyTabs = stickyHeader.querySelector('.category-tabs');
-      stickyTabs.style.visibility = 'hidden';
-
-      var heroTabs = hero.querySelector('.category-tabs');
-      var heroTabsRect = heroTabs.getBoundingClientRect();
-      var stickyTabsRect = stickyTabs.getBoundingClientRect();
-
-      var flyer = document.createElement('div');
-      flyer.className = 'category-tabs-flyer';
-      var tabsClone = heroTabs.cloneNode(true);
-      tabsClone.removeAttribute('id');
-      flyer.appendChild(tabsClone);
-      // 定位到 hero tabs 的当前视口位置
-      flyer.style.top = heroTabsRect.top + 'px';
-      document.body.appendChild(flyer);
-
-      // 下一帧：设置 transform 让它滑到吸顶位置
-      var dy = stickyTabsRect.top - heroTabsRect.top;
-      requestAnimationFrame(function() {
-        flyer.style.transform = 'translateY(' + dy + 'px)';
-      });
-
-      // 动画结束后：移除飞层，恢复吸顶 tabs 可见
-      flyer.addEventListener('transitionend', function onEnd() {
-        flyer.removeEventListener('transitionend', onEnd);
-        stickyTabs.style.visibility = '';
-        flyer.remove();
-      });
-      // 兜底：确保飞层一定被清理
-      setTimeout(function() {
-        stickyTabs.style.visibility = '';
-        if (flyer.parentNode) flyer.remove();
-      }, 400);
     }
 
     function playCategoryTransition(key, sourceCard, sourceRect) {
