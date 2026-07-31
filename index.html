@@ -823,11 +823,11 @@ cursor: pointer;
 /* 逸道详情切图中的「王牌菜榜」标签点击热区，返回红烧肉榜商户列表。 */
 .detail-page-overlay__rank-back {
 position: fixed;
-/* 覆盖逸道详情顶部完整信息区：商户名称、评分、榜单标签与营业信息均可点击返回。 */
-top: 25vw;
+/* 覆盖头图下沿至完整商户信息区；整块区域均可点击返回红烧肉榜。 */
+top: 30vw;
 left: 0;
 width: 100vw;
-height: 52vw;
+height: 76vw;
 z-index: 2;
 display: none;
 border: 0;
@@ -1714,17 +1714,31 @@ function returnToHongsharouRank() {
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
 detailOverlayBack.addEventListener('click', closeDetailOverlay);
-detailRankBack.addEventListener('click', returnToHongsharouRank);
-// 热区按钮之外再由详情容器兜底识别整条榜单信息栏，保证点击切图标签本身也能返回。
-detailOverlay.addEventListener('click', function(event) {
+// 部分移动端预览环境的透明按钮不会稳定派发 click，因此同时监听 pointerup/touchend。
+var rankReturnTriggered = false;
+function triggerRankReturn(event) {
+  if (event) event.preventDefault();
+  if (rankReturnTriggered) return;
+  rankReturnTriggered = true;
+  returnToHongsharouRank();
+  setTimeout(function() { rankReturnTriggered = false; }, 300);
+}
+detailRankBack.addEventListener('click', triggerRankReturn);
+detailRankBack.addEventListener('pointerup', triggerRankReturn);
+detailRankBack.addEventListener('touchend', triggerRankReturn, { passive: false });
+// 在 Overlay 捕获阶段直接接管榜单信息区事件，不依赖透明按钮是否命中。
+function handleYidaoRankZone(event) {
   if (!detailOverlay.classList.contains('detail-page-overlay--yidao')) return;
-  var top = window.innerWidth * 0.25;
-  var bottom = window.innerWidth * 0.77;
+  var top = window.innerWidth * 0.30;
+  var bottom = window.innerWidth * 1.06;
   if (event.clientY >= top && event.clientY <= bottom) {
-    event.preventDefault();
-    returnToHongsharouRank();
+    event.stopPropagation();
+    triggerRankReturn(event);
   }
-});
+}
+detailOverlay.addEventListener('pointerdown', handleYidaoRankZone, true);
+detailOverlay.addEventListener('touchstart', handleYidaoRankZone, { capture: true, passive: false });
+detailOverlay.addEventListener('click', handleYidaoRankZone, true);
 document.querySelectorAll('.shop-card-img[data-href]').forEach(function(card) {
   card.addEventListener('click', function() {
     var href = this.getAttribute('data-href');
