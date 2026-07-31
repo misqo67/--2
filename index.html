@@ -1715,6 +1715,16 @@ function returnToHongsharouRank() {
 }
 detailOverlayBack.addEventListener('click', closeDetailOverlay);
 detailRankBack.addEventListener('click', returnToHongsharouRank);
+// 热区按钮之外再由详情容器兜底识别整条榜单信息栏，保证点击切图标签本身也能返回。
+detailOverlay.addEventListener('click', function(event) {
+  if (!detailOverlay.classList.contains('detail-page-overlay--yidao')) return;
+  var top = window.innerWidth * 0.34;
+  var bottom = window.innerWidth * 0.66;
+  if (event.clientY >= top && event.clientY <= bottom) {
+    event.preventDefault();
+    returnToHongsharouRank();
+  }
+});
 document.querySelectorAll('.shop-card-img[data-href]').forEach(function(card) {
   card.addEventListener('click', function() {
     var href = this.getAttribute('data-href');
