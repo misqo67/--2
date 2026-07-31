@@ -526,7 +526,7 @@ z-index: 600;
       background-size: 100% auto;
       border-radius: 20px !important;
       box-shadow: none;
-      transition: left 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), top 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), width 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), height 0.34s cubic-bezier(0.22, 0.8, 0.25, 1);
+      transition: left 0.26s cubic-bezier(0.22, 0.8, 0.25, 1), top 0.26s cubic-bezier(0.22, 0.8, 0.25, 1), width 0.26s cubic-bezier(0.22, 0.8, 0.25, 1), height 0.26s cubic-bezier(0.22, 0.8, 0.25, 1);
     }
     .category-transition__card .category-list__header-full,
     .category-transition__card .category-transition__header-image {
@@ -545,7 +545,7 @@ z-index: 600;
       background: #FFFFFF;
       border-radius: 20px 20px 0 0;
       clip-path: inset(0 0 100% 0 round 20px 20px 0 0);
-      transition: top 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), clip-path 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: top 0.26s cubic-bezier(0.22, 0.8, 0.25, 1), clip-path 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
     /* 商户内容位于共享头图之上：白色承接区先铺底，列表再从头图下沿覆盖进来，
        从而避免头图在首卡入场时遮住列表而留下空白帧。 */
@@ -843,16 +843,16 @@ cursor: pointer;
     }
     .category-list--stagger.category-list--stagger-in .shop-card-img,
     .category-list--stagger.category-list--stagger-in .shop-divider {
-      animation: shop-list-item-in 0.28s cubic-bezier(0.22, 0.75, 0.25, 1) both;
+      animation: shop-list-item-in 0.20s cubic-bezier(0.22, 0.75, 0.25, 1) both;
     }
 /* 首屏卡片在短窗口内依次出现；屏外内容继续错峰，避免首屏留下大面积空白。 */
 .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(1) { animation-delay: 0ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 26ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 52ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 78ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 104ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 156ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 208ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 18ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 36ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 54ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 72ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 90ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 108ms; }
 .category-list--stagger.category-list--stagger-in .shop-divider { animation-delay: 16ms; }
     @keyframes shop-list-item-in {
       0% { opacity: 0; transform: translate3d(0, 8px, 0); }
@@ -1535,12 +1535,10 @@ categoryTransition.className = 'category-transition category-transition--active'
           categoryTransitionContent.classList.add('category-list--stagger');
           categoryTransitionContent.appendChild(transitionListMain);
           requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-              categoryTransitionContent.classList.add('category-list--stagger-in');
-            });
+            categoryTransitionContent.classList.add('category-list--stagger-in');
           });
         }
-      }, 24);
+      }, 8);
       setTimeout(function() {
         // 等最后一张临时商户卡完成入场后再交接；此时两层坐标一致且均为最终不透明状态。
         categoryTransition.classList.add('category-transition--handoff');
@@ -1564,7 +1562,7 @@ categoryTransition.className = 'category-transition category-transition--active'
           categoryTransition.setAttribute('aria-hidden', 'true');
           isCategoryPreparing = false;
         }, 80);
-      }, 990);
+      }, 400);
     }
 
     function playCategoryReverseTransition() {
