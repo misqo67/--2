@@ -113,11 +113,12 @@ font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',
       align-items: center;
       gap: 1.54vw; /* 12px */
     }
-    .nav-bar__back {
-      width: 7.44vw; /* 58px @2x */
-      height: 7.44vw;
-      cursor: pointer;
-    }
+.nav-bar__back {
+width: 7.44vw; /* 58px @2x */
+height: 7.44vw;
+cursor: default;
+pointer-events: none;
+}
     .nav-bar__back img {
       width: 100%;
       height: 100%;
@@ -205,14 +206,13 @@ font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',
       background: transparent;
       padding: 2.05vw 0 2.56vw; /* 16px 0 20px */
     }
-.hero .category-tabs {
-position: absolute;
-bottom: 19.49vw; /* 上移至贴近视频内容 = 152px @2x，与方案一保持一致 */
-left: 0;
-padding-bottom: 2.56vw;
-}
-    /* 进入分类时隐藏 hero 内的 tabs，避免与吸顶 tabs 同时可见导致“出现两次”。 */
-    .hero--tabs-hidden .category-tabs { visibility: hidden; }
+    .hero .category-tabs {
+      position: absolute;
+      bottom: 19.49vw; /* 上移至贴近视频内容 = 152px @2x，与方案一保持一致 */
+      left: 0;
+      padding-bottom: 2.56vw;
+    }
+
     /* ============================================================
        吸顶层：状态栏 + 导航栏 + 分类Tab
        页面下滑超过头图区域后，或切到具体分类 Tab 时，
@@ -515,9 +515,8 @@ z-index: 600;
 .category-transition--phase-card .category-transition__mask { opacity: 0; }
 .category-transition--phase-card .category-transition__card { box-shadow: none; }
 .category-transition--phase-sheet .category-transition__mask { opacity: 0; }
-/* 承接层使用与吸顶栏一致的深色底：卡片上方（0→targetTop）的区域因此与吸顶栏
-   无缝衔接，不会在头图区闪白；白色仅由下方 card / sheet 自身提供。 */
-.category-transition--active { background: #1A1008; }
+/* 承接区域在整个转场中维持纯白，避免空白区透出灰色页面底。 */
+.category-transition--active { background: #FFFFFF; }
     .category-transition__card {
       position: absolute;
       z-index: 1;
@@ -528,8 +527,7 @@ z-index: 600;
       background-size: 100% auto;
       border-radius: 20px !important;
       box-shadow: none;
-      /* 头图直接以目标位置、完整不透明呈现，不做位移/缩放/渐显。 */
-      opacity: 1;
+      transition: left 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), top 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), width 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), height 0.34s cubic-bezier(0.22, 0.8, 0.25, 1);
     }
     .category-transition__card .category-list__header-full,
     .category-transition__card .category-transition__header-image {
@@ -544,18 +542,19 @@ z-index: 600;
       z-index: 2;
       left: 0;
       width: 100%;
-      bottom: 0;
       overflow: hidden;
       background: #FFFFFF;
       border-radius: 20px 20px 0 0;
-      /* 白色承接区直接铺满下半部分（top + bottom 同时固定），
-         不做 clip-path 展开动画，也不会被固定高度截断。 */
+      clip-path: inset(0 0 100% 0 round 20px 20px 0 0);
+      transition: top 0.34s cubic-bezier(0.22, 0.8, 0.25, 1), clip-path 0.32s cubic-bezier(0.16, 1, 0.3, 1);
     }
     /* 商户内容位于共享头图之上：白色承接区先铺底，列表再从头图下沿覆盖进来，
        从而避免头图在首卡入场时遮住列表而留下空白帧。 */
     .category-transition__content { position: relative; z-index: 3; }
     .category-transition__content .category-list__main { margin-top: 0; }
-    /* sheet 不再需要 clip-path 展开动画，白色区始终铺满。 */
+    .category-transition--phase-sheet .category-transition__sheet {
+      clip-path: inset(0 0 0 0 round 20px 20px 0 0);
+    }
     /* 头图抵达终点后保持可见；不执行淡出，避免用户感知为切图消失后重新出现。 */
     .category-transition--handoff .category-transition__card {
       opacity: 1;
@@ -572,12 +571,18 @@ z-index: 600;
       overflow: hidden;
       background: #FFFFFF;
       opacity: 1;
-      transition: opacity 0.28s cubic-bezier(0.22, 0.75, 0.25, 1);
+      transform: translate3d(0, 0, 0);
+      transition: opacity 0.28s cubic-bezier(0.22, 0.75, 0.25, 1), transform 0.28s cubic-bezier(0.22, 0.75, 0.25, 1);
     }
     .category-transition--reverse.category-transition--reverse-fade .category-transition__content {
       opacity: 0;
+      transform: translate3d(0, -4px, 0);
     }
-    /* 返回首页时菜卡直接在固定位置出现，不做缩放或上下位移。 */
+    .rank-card--reverse-return {
+      transform: scale(1.012);
+      transition: transform 0.32s cubic-bezier(0.22, 0.8, 0.25, 1);
+      will-change: transform;
+    }
 
     /* ---------- 内容态 1：【全部】瀑布流（榜单卡片纵向罗列） ---------- */
     .rank-list-wrapper {
@@ -602,13 +607,8 @@ z-index: 600;
       overflow: hidden;
       cursor: pointer;
     }
-/* 转场初段保留原卡，让目标头图与吸顶栏在原页面尚可见时先就位，
-   随后再延时淡出，保持视觉连续、不留白帧。 */
-.rank-card--transitioning { pointer-events: none; }
-.rank-card--transitioning.rank-card--transitioning-fade {
-opacity: 0;
-transition: opacity 0.18s ease-out;
-}
+    /* 转场期间由共享元素浮层完全接管视觉，避免原卡与浮层的边缘叠绘造成圆角跳变。 */
+    .rank-card--transitioning { visibility: hidden; }
     .rank-card__header {
       width: 100%;
       padding-top: 68.3%;
@@ -838,28 +838,28 @@ cursor: pointer;
 .detail-page-overlay--yidao .detail-page-overlay__rank-back { display: block; }
     .category-list--stagger .shop-card-img,
     .category-list--stagger .shop-divider {
-      opacity: 0.35;
-opacity: 0;
-will-change: opacity;
-}
-.category-list--stagger.category-list--stagger-in .shop-card-img,
-.category-list--stagger.category-list--stagger-in .shop-divider {
-animation: shop-list-item-in 0.26s linear both;
-}
+      opacity: 0;
+      transform: translate3d(0, 8px, 0);
+      will-change: opacity, transform;
+    }
+    .category-list--stagger.category-list--stagger-in .shop-card-img,
+    .category-list--stagger.category-list--stagger-in .shop-divider {
+      animation: shop-list-item-in 0.28s cubic-bezier(0.22, 0.75, 0.25, 1) both;
+    }
 /* 首屏卡片在短窗口内依次出现；屏外内容继续错峰，避免首屏留下大面积空白。 */
 .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(1) { animation-delay: 0ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 18ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 36ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 54ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 72ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 90ms; }
-.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 108ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(2) { animation-delay: 26ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(3) { animation-delay: 52ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(4) { animation-delay: 78ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(5) { animation-delay: 104ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(6) { animation-delay: 156ms; }
+.category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 208ms; }
 .category-list--stagger.category-list--stagger-in .shop-divider { animation-delay: 16ms; }
-/* 纯透明度渐显：不做位移，避免逐帧重排造成的跳帧感 */
-@keyframes shop-list-item-in {
-from { opacity: 0; }
-to { opacity: 1; }
-}
+    @keyframes shop-list-item-in {
+      0% { opacity: 0; transform: translate3d(0, 8px, 0); }
+      55% { opacity: 0.82; transform: translate3d(0, 1px, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
     .shop-divider {
       width: 68.72vw;
       height: 0.13vw;
@@ -1404,13 +1404,8 @@ function commitCategory(key) {
 
       if (key === 'all') {
         window.scrollTo(0, 0);
-        // hero 必须瞬间恢复完整高度：若保留 max-height 过渡，展开约 360ms，
-        // 会一路把下方菜卡往下推，造成「内容整体上滑/错位」的观感。
-        hero.classList.remove('hero--collapsed', 'hero--tabs-hidden');
+        hero.classList.remove('hero--collapsed');
         hero.removeAttribute('style');
-        hero.style.transition = 'none';
-        void hero.offsetHeight;
-        hero.style.transition = '';
         allContent.style.display = '';
         allSafeArea.style.display = '';
         document.querySelectorAll('.category-list').forEach(function(panel) {
@@ -1456,20 +1451,12 @@ stickyHeader.classList.add('sticky-header--category');
 
     function prepareCategorySticky(key) {
       // 先切换状态标识，滚动事件便不会将已显示的吸顶层重新隐藏。
+      // 此阶段不收起原页面，避免浏览器滚动锚定导致视口自动位移。
       currentCategory = key;
       setActiveTab(key);
       stickyHeader.classList.add('sticky-header--category');
-      stickyTitle.textContent = '';
-
-      // 吸顶层瞬间出现（跳过渐显），配合深色承接层底色消除头图区白色闪帧。
-      stickyHeader.classList.remove('sticky-header--entering');
-      stickyHeader.style.transition = 'none';
       stickyHeader.classList.add('sticky-header--visible');
-      void stickyHeader.offsetHeight;
-      stickyHeader.style.transition = '';
-
-      // 吸顶 tabs 出现的同时隐藏 hero 内的 tabs，避免两份 tabs 同时可见。
-      hero.classList.add('hero--tabs-hidden');
+      stickyTitle.textContent = '';
     }
 
     function playCategoryTransition(key, sourceCard, sourceRect) {
@@ -1497,36 +1484,46 @@ stickyHeader.classList.add('sticky-header--category');
       var listMainPlaceholder = null;
       var transitionListMain = null;
 
-      // 卡片直接以目标位置与全宽呈现，不做位移或缩放
+      // 原卡和浮层在同一帧交接，整个过程只保留一个固定 20px 圆角的视觉主体。
       sourceCard.classList.add('rank-card--transitioning');
-      categoryTransitionCard.style.left = '0px';
-      categoryTransitionCard.style.top = targetTop + 'px';
-      categoryTransitionCard.style.width = '100%';
-      categoryTransitionCard.style.height = targetHeight + 'px';
+      categoryTransitionCard.style.left = sourceRect.left + 'px';
+      categoryTransitionCard.style.top = sourceRect.top + 'px';
+      categoryTransitionCard.style.width = sourceRect.width + 'px';
+      categoryTransitionCard.style.height = sourceRect.height + 'px';
       categoryTransitionCard.style.borderRadius = '20px';
       categoryTransitionCard.style.boxShadow = 'none';
-      // 共享卡片复用最终页面的真实头图节点
+      // 共享卡片复用最终页面的真实头图节点，不再用 background-image 创建第二张切图。
       transitionHeaderImage = targetImage;
       headerImagePlaceholder = document.createComment('category-transition-header-origin');
       transitionHeaderImage.parentNode.insertBefore(headerImagePlaceholder, transitionHeaderImage);
       categoryTransitionCard.appendChild(transitionHeaderImage);
-      // sheet 同时设置 top 和 bottom，白色承接区稳定延伸至视口底部
-      sheet.style.top = sheetTop + 'px';
-      sheet.style.bottom = '0px';
-      categoryTransitionContent.innerHTML = '';
-      categoryTransition.className = 'category-transition category-transition--active';
+sheet.style.top = sourceRect.bottom + 'px';
+sheet.style.height = sheetHeight + 'px';
+categoryTransitionContent.innerHTML = '';
+categoryTransition.className = 'category-transition category-transition--active';
       categoryTransition.setAttribute('aria-hidden', 'false');
 
-      // 商户列表整体提前出现，减少白屏等待时间
       setTimeout(function() {
         categoryTransition.classList.add('category-transition--phase-card');
+        categoryTransitionCard.style.left = '0px';
+        categoryTransitionCard.style.top = targetTop + 'px';
+        categoryTransitionCard.style.width = '100%';
+        categoryTransitionCard.style.height = targetHeight + 'px';
+        categoryTransitionCard.style.boxShadow = 'none';
+        sheet.style.top = sheetTop + 'px';
+      }, 16);
+      setTimeout(function() {
         categoryTransition.classList.add('category-transition--phase-sheet');
-        sourceCard.classList.add('rank-card--transitioning-fade');
+      }, 90);
+      setTimeout(function() {
+        // 列表从共享头图下沿开始，和头图卡片一起上移；商户卡不再等头图到位才出现。
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         commitCategory(key);
         var activePanel = document.querySelector('.category-list--active.category-list--stagger');
         if (activePanel) {
           transitionListMain = activePanel.querySelector('.category-list__main');
+          // 列表只保留一份真实 DOM：在原位置放置等高占位，转场中把真实节点移入承接层。
+          // 这样不会创建副本，也不会在最终态重新绘制第二份头图/商户列表。
           listMainPlaceholder = document.createElement('div');
           listMainPlaceholder.className = 'category-list__main-placeholder';
           listMainPlaceholder.style.height = transitionListMain.offsetHeight + 'px';
@@ -1538,12 +1535,18 @@ stickyHeader.classList.add('sticky-header--category');
           targetPanel.classList.remove('category-list--stagger-in');
           categoryTransitionContent.classList.add('category-list--stagger');
           categoryTransitionContent.appendChild(transitionListMain);
-          categoryTransitionContent.classList.add('category-list--stagger-in');
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              categoryTransitionContent.classList.add('category-list--stagger-in');
+            });
+          });
         }
-      }, 16);
+      }, 24);
       setTimeout(function() {
+        // 等最后一张临时商户卡完成入场后再交接；此时两层坐标一致且均为最终不透明状态。
         categoryTransition.classList.add('category-transition--handoff');
         setTimeout(function() {
+          // 承接层仍完整覆盖页面时归还同一份真实列表与真实头图节点。
           if (transitionListMain && listMainPlaceholder && listMainPlaceholder.parentNode) {
             listMainPlaceholder.parentNode.insertBefore(transitionListMain, listMainPlaceholder);
             listMainPlaceholder.remove();
@@ -1554,7 +1557,7 @@ stickyHeader.classList.add('sticky-header--category');
           }
           categoryTransition.className = 'category-transition';
           targetPanel.classList.remove('category-list--transitioning-header');
-          sourceCard.classList.remove('rank-card--transitioning', 'rank-card--transitioning-fade');
+          sourceCard.classList.remove('rank-card--transitioning');
           categoryTransitionCard.removeAttribute('style');
           sheet.removeAttribute('style');
           categoryTransitionContent.classList.remove('category-list--stagger', 'category-list--stagger-in');
@@ -1562,7 +1565,7 @@ stickyHeader.classList.add('sticky-header--category');
           categoryTransition.setAttribute('aria-hidden', 'true');
           isCategoryPreparing = false;
         }, 80);
-      }, 610);
+      }, 990);
     }
 
     function playCategoryReverseTransition() {
@@ -1577,25 +1580,31 @@ stickyHeader.classList.add('sticky-header--category');
       }
 
       var listSnapshot = activePanel.querySelector('.category-list__main').outerHTML;
-      // 先用列表快照铺满整屏，再恢复首页布局：首页的重排与滚动归零都发生在遮挡之下，
-      // 因此菜卡只会在最终固定位置直接出现，不会出现错位或从上往下位移的中间帧。
+      // 返回时不再创建从列表头部飞出的共享头图卡片；首页菜卡自己做轻微回落承接。
+      commitCategory('all');
+      sourceCard.classList.add('rank-card--reverse-return');
       categoryTransitionContent.innerHTML = '<div class="category-list category-list--active">' + listSnapshot + '</div>';
       categoryTransition.className = 'category-transition category-transition--active category-transition--reverse';
       categoryTransition.setAttribute('aria-hidden', 'false');
-      commitCategory('all');
-      // 首页已在快照之下完成布局，快照随后原地渐隐即可。
+      // 反向时让当前列表仍留在原位并渐隐；不再用 handoff 直接隐藏，避免白色空屏。
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
+          // 列表先离场，菜卡稍后回落，形成清晰但克制的反向承接。
           categoryTransition.classList.add('category-transition--reverse-fade');
+          setTimeout(function() {
+            sourceCard.classList.remove('rank-card--reverse-return');
+          }, 70);
         });
       });
 
       setTimeout(function() {
+        // 只清理列表渐隐快照，整个返回过程没有额外头图卡片。
         categoryTransition.className = 'category-transition';
         categoryTransitionCard.removeAttribute('style');
         categoryTransitionCard.innerHTML = '';
         categoryTransitionContent.innerHTML = '';
         categoryTransition.setAttribute('aria-hidden', 'true');
+        sourceCard.classList.remove('rank-card--reverse-return');
         isCategoryPreparing = false;
       }, 420);
     }
@@ -1627,13 +1636,10 @@ stickyHeader.classList.add('sticky-header--category');
         switchCategory(this.dataset.category);
       });
     });
-    document.querySelectorAll('.nav-bar__back').forEach(function(backButton) {
-      backButton.addEventListener('click', function() {
-        if (currentCategory !== 'all') playCategoryReverseTransition();
-      });
-    });
+// 顶部返回图标仅作视觉展示：首页与商户列表页均不可点击。
+// 商户列表返回首页统一由「全部」Tab 的反向转场完成。
 
-    // 点击【全部】瀑布流里的菜品榜单卡片：直接进入该分类的商户列表态
+// 点击【全部】瀑布流里的菜品榜单卡片：直接进入该分类的商户列表态
     document.querySelectorAll('.rank-card[data-category]').forEach(function(card) {
       card.addEventListener('click', function(e) {
         // 命中商户横滑区域时不触发整卡跳转，保留横滑区自身的滚动/点击行为
