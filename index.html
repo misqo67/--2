@@ -10,8 +10,9 @@
   <link rel="prefetch" as="document" href="shop-detail-renhe.html">
   <link rel="prefetch" as="document" href="shop-detail-yijia.html">
   <link rel="prefetch" as="document" href="shop-detail-heji.html">
-  <link rel="prefetch" as="image" href="assets/shop-detail-full.webp">
-  <link rel="prefetch" as="image" href="assets/shop-detail-renhe.webp">
+<link rel="prefetch" as="image" href="assets/shop-detail-yidao.webp">
+<link rel="prefetch" as="image" href="assets/shop-detail-full.webp">
+<link rel="prefetch" as="image" href="assets/shop-detail-renhe.webp">
   <link rel="prefetch" as="image" href="assets/shop-detail-yijia.webp">
   <link rel="prefetch" as="image" href="assets/shop-detail-heji.webp">
   <title>王牌菜榜</title>
@@ -819,6 +820,21 @@ border: 0;
 background: transparent;
 cursor: pointer;
 }
+/* 逸道详情切图中的「王牌菜榜」标签点击热区，返回红烧肉榜商户列表。 */
+.detail-page-overlay__rank-back {
+position: fixed;
+/* 覆盖逸道详情中用户标注的整条榜单信息栏，提升点击容错。 */
+top: 34vw;
+left: 0;
+width: 100vw;
+height: 32vw;
+z-index: 2;
+display: none;
+border: 0;
+background: transparent;
+cursor: pointer;
+}
+.detail-page-overlay--yidao .detail-page-overlay__rank-back { display: block; }
     .category-list--stagger .shop-card-img,
     .category-list--stagger .shop-divider {
       opacity: 0;
@@ -1187,7 +1203,7 @@ cursor: pointer;
       </div>
       <div class="category-list__main">
         <div class="category-list__shops">
-          <img class="shop-card-img" src="assets/shop-hongsharou-full-1.webp" alt="逸道（益丰·外滩源店）" data-href="shop-detail.html">
+          <img class="shop-card-img" src="assets/shop-hongsharou-full-1.webp" alt="逸道（益丰·外滩源店）" data-href="shop-detail-yidao.html">
           <div class="shop-divider"></div>
           <img class="shop-card-img" src="assets/shop-hongsharou-full-2.webp" alt="人和馆·上海菜（徐汇店）" data-href="shop-detail-renhe.html">
           <div class="shop-divider"></div>
@@ -1659,6 +1675,7 @@ categoryTransition.className = 'category-transition category-transition--active'
 
 // ---------- 商户详情页：使用预解码整页切图即时打开，避免 iframe 首帧合成卡顿 ----------
 var detailImageMap = {
+  'shop-detail-yidao.html': 'assets/shop-detail-yidao.webp',
   'shop-detail.html': 'assets/shop-detail-full.webp',
   'shop-detail-renhe.html': 'assets/shop-detail-renhe.webp',
   'shop-detail-yijia.html': 'assets/shop-detail-yijia.webp',
@@ -1673,8 +1690,13 @@ var detailOverlayBack = document.createElement('button');
 detailOverlayBack.className = 'detail-page-overlay__back';
 detailOverlayBack.type = 'button';
 detailOverlayBack.setAttribute('aria-label', '返回');
+var detailRankBack = document.createElement('button');
+detailRankBack.className = 'detail-page-overlay__rank-back';
+detailRankBack.type = 'button';
+detailRankBack.setAttribute('aria-label', '返回王牌菜榜红烧肉榜');
 detailOverlay.appendChild(detailOverlayImage);
 detailOverlay.appendChild(detailOverlayBack);
+detailOverlay.appendChild(detailRankBack);
 document.body.appendChild(detailOverlay);
 // 页面空闲时只解码详情切图，不创建和渲染多个全屏 iframe。
 Object.keys(detailImageMap).forEach(function(href) {
@@ -1686,7 +1708,13 @@ function closeDetailOverlay() {
   detailOverlay.className = 'detail-page-overlay';
   detailOverlay.scrollTop = 0;
 }
+function returnToHongsharouRank() {
+  closeDetailOverlay();
+  commitCategory('hongsharou');
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+}
 detailOverlayBack.addEventListener('click', closeDetailOverlay);
+detailRankBack.addEventListener('click', returnToHongsharouRank);
 document.querySelectorAll('.shop-card-img[data-href]').forEach(function(card) {
   card.addEventListener('click', function() {
     var href = this.getAttribute('data-href');
@@ -1694,7 +1722,8 @@ document.querySelectorAll('.shop-card-img[data-href]').forEach(function(card) {
     // 同一图层直接换入预解码切图；不等待页面请求、iframe 布局或首帧绘制。
     detailOverlay.scrollTop = 0;
     detailOverlayImage.src = detailImageMap[href];
-    detailOverlay.className = 'detail-page-overlay detail-page-overlay--visible';
+    detailOverlay.className = 'detail-page-overlay detail-page-overlay--visible' +
+      (href === 'shop-detail-yidao.html' ? ' detail-page-overlay--yidao' : '');
   });
 });
   </script>
