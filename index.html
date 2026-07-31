@@ -607,7 +607,11 @@ z-index: 600;
       cursor: pointer;
     }
     /* 转场期间由共享元素浮层完全接管视觉，避免原卡与浮层的边缘叠绘造成圆角跳变。 */
-    .rank-card--transitioning { visibility: hidden; }
+    .rank-card--transitioning {
+      opacity: 0;
+      transition: opacity 0.18s ease-out;
+      pointer-events: none;
+    }
     .rank-card__header {
       width: 100%;
       padding-top: 68.3%;
@@ -837,8 +841,8 @@ cursor: pointer;
 .detail-page-overlay--yidao .detail-page-overlay__rank-back { display: block; }
     .category-list--stagger .shop-card-img,
     .category-list--stagger .shop-divider {
-      opacity: 0;
-      transform: translate3d(0, 8px, 0);
+      opacity: 0.35;
+      transform: translate3d(0, 5px, 0);
       will-change: opacity, transform;
     }
     .category-list--stagger.category-list--stagger-in .shop-card-img,
@@ -855,8 +859,8 @@ cursor: pointer;
 .category-list--stagger.category-list--stagger-in .shop-card-img:nth-of-type(7) { animation-delay: 108ms; }
 .category-list--stagger.category-list--stagger-in .shop-divider { animation-delay: 16ms; }
     @keyframes shop-list-item-in {
-      0% { opacity: 0; transform: translate3d(0, 8px, 0); }
-      55% { opacity: 0.82; transform: translate3d(0, 1px, 0); }
+      0% { opacity: 0.35; transform: translate3d(0, 5px, 0); }
+      55% { opacity: 0.88; transform: translate3d(0, 1px, 0); }
       100% { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     .shop-divider {
